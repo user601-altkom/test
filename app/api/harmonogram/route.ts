@@ -27,8 +27,9 @@ function parsujNadplate(szukane: URLSearchParams): Nadplata[] | string {
     const kwota = parsujLiczbe(kwotaTekst ?? null);
     if (!Number.isInteger(numerRaty) || numerRaty < 1) return 'nadplata: numer raty musi być dodatnią liczbą całkowitą';
     if (!Number.isFinite(kwota) || kwota <= 0) return 'nadplata: kwota musi być dodatnią liczbą';
-    if (tryb !== 'obniz_rate' && tryb !== 'skroc_okres') return 'nadplata: tryb obniz_rate albo skroc_okres';
-    nadplaty.push({ numerRaty, kwotaGr: Math.round(kwota * 100), tryb });
+    const wybranyTryb = tryb ?? 'skroc_okres';
+    if (wybranyTryb !== 'obniz_rate' && wybranyTryb !== 'skroc_okres') return 'nadplata: tryb obniz_rate albo skroc_okres';
+    nadplaty.push({ numerRaty, kwotaGr: Math.round(kwota * 100), tryb: wybranyTryb });
   }
   return nadplaty;
 }
@@ -36,7 +37,8 @@ function parsujNadplate(szukane: URLSearchParams): Nadplata[] | string {
 function parsujParametry(szukane: URLSearchParams): ParametryKredytu | string {
   const kwota = parsujLiczbe(szukane.get('kwota'));
   const liczbaRat = Number(szukane.get('liczbaRat'));
-  const marza = parsujLiczbe(szukane.get('marza'));
+  const marzaTekst = szukane.get('marza');
+  const marza = parsujLiczbe(marzaTekst);
   const wskaznik = szukane.get('wskaznik');
   const typRat = szukane.get('typRat');
   const pierwszaRata = szukane.get('pierwszaRata') ?? '';
@@ -45,6 +47,7 @@ function parsujParametry(szukane: URLSearchParams): ParametryKredytu | string {
   if (kwota * 100 > MAKSYMALNA_KWOTA_GR) return 'kwota: maksymalnie 50000000 zł';
   if (!Number.isInteger(liczbaRat) || liczbaRat <= 0) return 'liczbaRat: liczba całkowita dodatnia, np. 300';
   if (liczbaRat > MAKSYMALNA_LICZBA_RAT) return 'liczbaRat: maksymalnie 420 rat';
+  if (marzaTekst === null || marzaTekst.trim() === '') return 'marza: punkty procentowe, np. 2.11';
   if (!Number.isFinite(marza) || marza < 0) return 'marza: punkty procentowe, np. 2.11';
   if (wskaznik !== 'POLSTR_1M' && wskaznik !== 'WIBOR_3M') return 'wskaznik: POLSTR_1M albo WIBOR_3M';
   if (typRat !== 'rowne' && typRat !== 'malejace') return 'typRat: rowne albo malejace';

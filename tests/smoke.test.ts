@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { GET } from '../app/api/harmonogram/route';
 import { seriaWskaznika } from '../src/dane/wskazniki';
 import { policzHarmonogram, type ParametryKredytu } from '../src/domena/harmonogram';
 
@@ -32,6 +33,40 @@ function parametryBazowe(nadplaty: ParametryKredytu['nadplaty'] = []): Parametry
 }
 
 describe('domena harmonogramu', () => {
+  it('obsługuje oba tryby nadpłaty w przypadku kontrolnym CR-A', () => {
+    const bazoweParametry: ParametryKredytu = {
+      ...parametryBazowe(),
+      kwotaGr: 300_000_00,
+      liczbaRat: 240,
+      marza: 0.0211,
+      pierwszaRata: '2026-10-01',
+      seriaWskaznika: [{ od: '2026-01-01', stopa: 0.0455 }],
+    };
+    const wynikObnizenia = policzHarmonogram({
+      ...bazoweParametry,
+      nadplaty: [{ numerRaty: 1, kwotaGr: 30_000_00, tryb: 'obniz_rate' }],
+    });
+    const wynikSkrocenia = policzHarmonogram({
+      ...bazoweParametry,
+      nadplaty: [{ numerRaty: 1, kwotaGr: 30_000_00, tryb: 'skroc_okres' }],
+    });
+
+    expect(wynikObnizenia.raty[0]?.rataGr).toBe(226_507);
+    expect(wynikObnizenia.raty[0]?.saldoPoSplacieGr).toBe(269_399_93);
+    expect(wynikObnizenia.raty).toHaveLength(240);
+    expect(wynikObnizenia.raty[1]?.rataGr).toBe(203_811);
+    expect(wynikSkrocenia.raty).toHaveLength(196);
+    expect(wynikSkrocenia.raty.at(-1)?.rataGr).toBe(220_053);
+
+    for (const wynik of [wynikObnizenia, wynikSkrocenia]) {
+      const sumaKapitalu = wynik.raty.reduce(
+        (suma, rata) => suma + rata.kapitalGr + rata.nadplataGr,
+        0,
+      );
+      expect(sumaKapitalu).toBe(300_000_00);
+    }
+  });
+
   it('wylicza ratę kontrolną dla rat równych przy stałej stopie', () => {
     const wynik = policzHarmonogram(parametryBazowe());
 
@@ -107,10 +142,53 @@ describe('domena harmonogramu', () => {
     expect(wynik.raty[0]?.nadplataOgraniczona).toBe(true);
   });
 
+  it('odrzuca dwie nadpłaty dla tego samego numeru raty', () => {
+    expect(() => policzHarmonogram({
+      ...parametryBazowe(),
+      nadplaty: [
+        { numerRaty: 2, kwotaGr: 100_00, tryb: 'obniz_rate' },
+        { numerRaty: 2, kwotaGr: 200_00, tryb: 'skroc_okres' },
+      ],
+    })).toThrow('nie może mieć dwóch nadpłat');
+  });
+
+  it('odrzuca ratę wcześniejszą niż pierwszy wpis serii wskaźnika', () => {
+    expect(() => policzHarmonogram({
+      ...parametryBazowe(),
+      pierwszaRata: '2025-12-01',
+    })).toThrow('brak wskaźnika dla daty');
+  });
+
   it('odrzuca nieistniejącą datę i parametry poza limitami MVP', () => {
     expect(() => policzHarmonogram({ ...parametryBazowe(), pierwszaRata: '2026-02-30' })).toThrow('data: nieistniejąca data');
     expect(() => policzHarmonogram({ ...parametryBazowe(), liczbaRat: 421 })).toThrow('liczbaRat: maksymalnie 420');
     expect(() => policzHarmonogram({ ...parametryBazowe(), kwotaGr: 5_000_000_001 })).toThrow('kwotaGr: maksymalnie 50000000 zł');
+  });
+
+  it('domyślnie skraca okres nadpłaty w kontrakcie API', async () => {
+    const parametry = new URLSearchParams({
+      kwota: '300000',
+      liczbaRat: '240',
+      marza: '2.11',
+      wskaznik: 'WIBOR_3M',
+      typRat: 'rowne',
+      pierwszaRata: '2026-10-01',
+    });
+    const bezTrybu = new URLSearchParams(parametry);
+    bezTrybu.set('nadplata', '1:30000');
+    const zTrybem = new URLSearchParams(parametry);
+    zTrybem.set('nadplata', '1:30000:skroc_okres');
+    const odpowiedzBezTrybu = await GET(new Request(`http://localhost/api/harmonogram?${bezTrybu}`));
+    const odpowiedzZTrybem = await GET(new Request(`http://localhost/api/harmonogram?${zTrybem}`));
+
+    expect(odpowiedzBezTrybu.status).toBe(200);
+    expect(odpowiedzZTrybem.status).toBe(200);
+    expect(await odpowiedzBezTrybu.json()).toEqual(await odpowiedzZTrybem.json());
+
+    const nieznanyTryb = new URLSearchParams(parametry);
+    nieznanyTryb.set('nadplata', '1:30000:nieznany');
+    const odpowiedzNieznanyTryb = await GET(new Request(`http://localhost/api/harmonogram?${nieznanyTryb}`));
+    expect(odpowiedzNieznanyTryb.status).toBe(400);
   });
 
   it('testy działają w strefie Europe/Warsaw', () => {

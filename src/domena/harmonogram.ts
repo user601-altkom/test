@@ -76,7 +76,9 @@ function dataDoTekstu(data: Date): string {
 }
 
 function znajdzWskaznik(data: string, seria: WpisSerii[]): number {
-  let znaleziony = seria[0];
+  const pierwszyWpis = seria[0];
+  if (!pierwszyWpis || data < pierwszyWpis.od) throw new Error('brak wskaźnika dla daty');
+  let znaleziony = pierwszyWpis;
   for (const wpis of seria) {
     if (wpis.od <= data) znaleziony = wpis;
   }
@@ -93,9 +95,12 @@ function sprawdzParametry(parametry: ParametryKredytu): void {
   dataJakoObiekt(parametry.pierwszaRata);
   if (parametry.seriaWskaznika.length === 0) throw new Error('seria wskaźnika nie może być pusta');
   for (const wpis of parametry.seriaWskaznika) dataJakoObiekt(wpis.od);
+  const numeryNadplat = new Set<number>();
   for (const nadplata of parametry.nadplaty) {
     if (!Number.isInteger(nadplata.numerRaty) || nadplata.numerRaty < 1 || nadplata.numerRaty > parametry.liczbaRat) throw new Error('numer nadpłaty jest poza harmonogramem');
     if (!Number.isInteger(nadplata.kwotaGr) || nadplata.kwotaGr <= 0) throw new Error('kwota nadpłaty musi być dodatnia');
+    if (numeryNadplat.has(nadplata.numerRaty)) throw new Error('rata nie może mieć dwóch nadpłat');
+    numeryNadplat.add(nadplata.numerRaty);
   }
 }
 

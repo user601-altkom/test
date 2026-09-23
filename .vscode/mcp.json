@@ -15,7 +15,7 @@
       "type": "http",
       "url": "https://mcp.context7.com/mcp",
       "headers": {
-        "Authorization": "Bearer ctx7sk-4dd7103a-2aa7-41dd-95d6-64ddf77e5c91"
+        "Authorization": "Bearer ${env:CONTEXT7_API_KEY}"
       }
     }
   }

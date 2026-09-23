@@ -1,0 +1,38 @@
+# Review kodu
+
+Data: 2026-09-23
+
+## Findings
+
+### RYZYKO (krytyczne): jawny token dostępu w repozytorium
+
+Plik `.vscode/mcp.json` zawiera token Bearer w konfiguracji serwera Context7. Token może zostać wykorzystany przez osoby mające dostęp do repozytorium.
+
+Zalecenie: natychmiast unieważnić token, usunąć go z pliku i historii repozytorium oraz przekazywać go przez zmienną środowiskową.
+
+### BŁĄD: nadpłaty dla tego samego numeru raty są tracone
+
+W `src/domena/harmonogram.ts` lista nadpłat jest zamieniana na `Map` indeksowaną numerem raty. Przy dwóch nadpłatach dla tej samej raty pozostaje tylko ostatnia pozycja, mimo że formularz pozwala dodać wiele nadpłat.
+
+Zalecenie: sumować nadpłaty dla tego samego numeru raty albo odrzucać duplikaty. Dodać test z dwiema nadpłatami na tę samą ratę.
+
+### RYZYKO: użycie przyszłej stawki dla daty przed początkiem serii
+
+`znajdzWskaznik` inicjalizuje znaleziony wpis pierwszym elementem serii. Jeśli data pierwszej raty jest wcześniejsza niż pierwszy wpis, harmonogram używa przyszłej stawki.
+
+Zalecenie: odrzucać taki harmonogram albo jawnie określić regułę wyboru stawki. Dodać test brzegowy.
+
+### RYZYKO: brak marży w API jest interpretowany jako zero
+
+W `app/api/harmonogram/route.ts` brak parametru `marza` przechodzi przez `Number('')` jako `0`, więc żądanie bez wymaganego parametru jest akceptowane.
+
+Zalecenie: osobno sprawdzać brak parametru i zwracać błąd walidacji.
+
+## Walidacja
+
+- `npm test` - przechodzi, 11 testów.
+- `npm run typecheck` - przechodzi.
+- `npm run build` - przechodzi.
+- `npm run lint` - przechodzi.
+
+Review nie wprowadzał zmian w kodzie.
