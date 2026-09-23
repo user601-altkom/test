@@ -1,0 +1,49 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - paragraph [ref=f1e6]: Narzędzie dla doradcy
+          - heading "Harmonogram spłat" [level=1] [ref=f1e7]
+          - paragraph [ref=f1e8]: Kalkulator kredytu hipotecznego na POLSTR i WIBOR.
+        - paragraph [ref=f1e9]: Stawka okresowa na podstawie serii wskaźnika.
+      - generic [ref=f1e10]:
+        - generic [ref=f1e11]:
+          - generic [ref=f1e12]:
+            - paragraph [ref=f1e13]: Parametry kredytu
+            - heading "Uzupełnij założenia" [level=2] [ref=f1e14]
+          - generic [ref=f1e15]:
+            - generic [ref=f1e16]:
+              - text: Kwota kredytu (zł)
+              - textbox "Kwota kredytu (zł)" [ref=f1e17]: "400000"
+            - generic [ref=f1e18]:
+              - text: Liczba rat
+              - spinbutton "Liczba rat" [ref=f1e19]: "300"
+            - generic [ref=f1e20]:
+              - text: Data pierwszej raty
+              - textbox "Data pierwszej raty" [ref=f1e21]: 2026-10-01
+            - generic [ref=f1e22]:
+              - text: Marża banku (pp)
+              - textbox "Marża banku (pp)" [ref=f1e23]: "2.11"
+          - group "Wskaźnik" [ref=f1e24]:
+            - generic [ref=f1e26]:
+              - button "POLSTR 1M" [ref=f1e27]
+              - button "WIBOR 3M" [ref=f1e28]
+          - group "Typ rat" [ref=f1e29]:
+            - generic [ref=f1e31]:
+              - button "Równe" [ref=f1e32]
+              - button "Malejące" [ref=f1e33]
+          - generic [ref=f1e34]:
+            - generic [ref=f1e35]:
+              - generic [ref=f1e36]:
+                - paragraph [ref=f1e37]: Nadpłaty
+                - heading "Dodatkowe wpłaty" [level=2] [ref=f1e38]
+              - button "+ Dodaj" [ref=f1e39]
+            - paragraph [ref=f1e40]: Brak nadpłat. Harmonogram bazowy.
+          - button "Policz harmonogram" [ref=f1e41]
+        - generic [ref=f1e43]:
+          - paragraph [ref=f1e44]: Wynik obliczeń
+          - heading "Uzupełnij parametry i policz harmonogram." [level=2] [ref=f1e45]
+          - paragraph [ref=f1e46]: Porównaj raty, odsetki i saldo kredytu w jednym widoku.
+  - button "Open Next.js Dev Tools" [ref=f1e52] [cursor=pointer]
+  - alert [ref=f1e56]

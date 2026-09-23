@@ -1,0 +1,11 @@
+- generic [active] [ref=e1] [box=0,-186,1226,1174]:
+  - main [ref=e2] [box=0,-186,1226,1174]:
+    - generic [ref=e3] [box=48,-154,1130,1110]:
+      - generic [ref=e4] [box=48,-154,1130,177]:
+        - generic [ref=e5] [box=48,-154,754,144]
+        - paragraph [ref=e9] [box=986,-50,192,40]: Stawka okresowa na podstawie serii wskaźnika.
+      - generic [ref=e10] [box=48,63,1130,893]:
+        - generic [ref=e11] [box=48,63,430,893]
+        - generic [ref=e42] [box=510,63,668,893]
+  - button "Open Next.js Dev Tools" [ref=e52] [cursor=pointer] [box=22,874,32,32]
+  - alert [ref=e56] [box=-1,987,1,1]

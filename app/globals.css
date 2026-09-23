@@ -18,7 +18,7 @@ body { background: var(--kolor-tlo); color: var(--kolor-tekst); font-family: var
 h1, h2, h3 { font-weight: 600; }
 .surface { background: var(--kolor-powierzchni); box-shadow: 0 3px 10px rgb(45 43 43 / 16%); }
 .eyebrow, .field-label { color: var(--kolor-akcent); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
-.field { display: flex; flex-direction: column; gap: 0.4rem; color: var(--kolor-muted); font-size: 0.82rem; font-weight: 600; }
+.field { display: flex; min-width: 0; flex-direction: column; gap: 0.4rem; color: var(--kolor-muted); font-size: 0.82rem; font-weight: 600; }
 .field input, .field select { min-width: 0; border: 1px solid var(--kolor-divider); border-radius: 2px; background: var(--kolor-tlo); color: var(--kolor-tekst); padding: 0.72rem 0.8rem; font: inherit; font-weight: 400; outline: none; }
 .field input:focus, .field select:focus { border-color: var(--kolor-akcent); box-shadow: 0 0 0 2px rgb(0 136 176 / 18%); }
 .segmented { display: flex; margin-top: 0.5rem; border: 1px solid var(--kolor-divider); background: var(--kolor-tlo); padding: 3px; }
@@ -29,13 +29,13 @@ h1, h2, h3 { font-weight: 600; }
 .btn-primary:hover, .btn-secondary:hover { opacity: 0.82; }
 .btn-primary:disabled { cursor: wait; opacity: 0.55; }
 .btn-secondary { border: 1px solid var(--kolor-akcent); color: var(--kolor-akcent-700); }
-.remove-button { align-self: end; padding: 0.7rem; color: var(--kolor-akcent-2); font-size: 1.5rem; line-height: 1; }
+.remove-button { width: 2rem; height: 2rem; align-self: end; justify-self: start; padding: 0; color: var(--kolor-akcent-2); font-size: 1.5rem; line-height: 1; }
 .empty-state { display: flex; min-height: 20rem; flex-direction: column; justify-content: center; border: 1px solid var(--kolor-divider); padding: 2rem; }
 .empty-state h2 { margin-top: 0.6rem; max-width: 26rem; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.05; }
 .empty-state p:last-child { margin-top: 1rem; color: var(--kolor-muted); }
-.metric { display: flex; min-height: 7.5rem; flex-direction: column; justify-content: space-between; background: var(--kolor-powierzchni); padding: 1rem; }
+.metric { display: flex; min-height: 7.5rem; flex-direction: column; justify-content: center; gap: 0.75rem; background: var(--kolor-powierzchni); padding: 1rem; }
 .metric span { color: var(--kolor-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-.metric strong { font-size: clamp(1.3rem, 2.3vw, 2rem); }
+.metric strong { font-size: 1rem; line-height: 1.05; white-space: nowrap; }
 table { min-width: 46rem; width: 100%; border-collapse: collapse; font-size: 0.88rem; }
 th, td { padding: 0.75rem 1rem; text-align: left; white-space: nowrap; }
 th { color: var(--kolor-muted); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }

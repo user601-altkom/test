@@ -96,6 +96,23 @@ describe('domena harmonogramu', () => {
     expect(sumaKapitalu).toBe(400_000_00);
   });
 
+  it('ogranicza nadpłatę do pozostałego salda i oznacza ograniczenie', () => {
+    const wynik = policzHarmonogram({
+      ...parametryBazowe(),
+      liczbaRat: 2,
+      nadplaty: [{ numerRaty: 1, kwotaGr: 999_999_99, tryb: 'obniz_rate' }],
+    });
+
+    expect(wynik.raty[0]?.nadplataGr).toBeLessThan(999_999_99);
+    expect(wynik.raty[0]?.nadplataOgraniczona).toBe(true);
+  });
+
+  it('odrzuca nieistniejącą datę i parametry poza limitami MVP', () => {
+    expect(() => policzHarmonogram({ ...parametryBazowe(), pierwszaRata: '2026-02-30' })).toThrow('data: nieistniejąca data');
+    expect(() => policzHarmonogram({ ...parametryBazowe(), liczbaRat: 421 })).toThrow('liczbaRat: maksymalnie 420');
+    expect(() => policzHarmonogram({ ...parametryBazowe(), kwotaGr: 5_000_000_001 })).toThrow('kwotaGr: maksymalnie 50000000 zł');
+  });
+
   it('testy działają w strefie Europe/Warsaw', () => {
     expect(process.env.TZ).toBe('Europe/Warsaw');
   });

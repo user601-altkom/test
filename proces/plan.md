@@ -14,6 +14,11 @@ Cel: dokończyć kalkulator harmonogramu spłat w istniejącej architekturze Nex
 - Eksport CSV: UTF-8, separator `;`, polskie nagłówki.
 - Nadpłata nie ma dnia; w planie trzeba przyjąć jeden deterministyczny moment zastosowania i testować go.
 - Użytkownik wybrał zmianę wskaźnika „od następnej raty”; trzeba doprecyzować, czy wpis `od` oznacza ratę graniczną, po której dopiero kolejna rata używa nowej wartości.
+- Nadpłata jest wskazywana numerem raty, stosowana po tej racie i ograniczana do pozostałego salda.
+- Limity MVP: maksymalnie 420 rat i 50 000 000 zł; nieistniejące daty są odrzucane.
+- Tryb `obniz_rate` przelicza kolejne raty, a `skroc_okres` zachowuje ratę i kończy harmonogram po wcześniejszej spłacie.
+- Tabela i CSV zawierają faktycznie zastosowaną nadpłatę; UI pokazuje komunikat o jej ograniczeniu.
+- Rate limiting i timeout są odłożone do wersji `v0.2`.
 
 ### Kroki
 1. Ustalić kontrakt danych i reguły graniczne: typy parametrów, raty, wynik, nadpłaty, walidacja, daty i zaokrąglanie. Pytania: dokładny moment nadpłaty; czy nowa stawka obowiązuje od raty granicznej czy dopiero kolejnej.

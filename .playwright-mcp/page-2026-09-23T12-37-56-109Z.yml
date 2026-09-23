@@ -1,0 +1,105 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - paragraph [ref=e6]: Narzędzie dla doradcy
+          - heading "Harmonogram spłat" [level=1] [ref=e7]
+          - paragraph [ref=e8]: Kalkulator kredytu hipotecznego na POLSTR i WIBOR.
+        - paragraph [ref=e9]: Stawka okresowa na podstawie serii wskaźnika.
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - paragraph [ref=e13]: Parametry kredytu
+            - heading "Uzupełnij założenia" [level=2] [ref=e14]
+          - generic [ref=e15]:
+            - generic [ref=e16]:
+              - text: Kwota kredytu (zł)
+              - textbox "Kwota kredytu (zł)" [ref=e17]: "400000"
+            - generic [ref=e18]:
+              - text: Liczba rat
+              - spinbutton "Liczba rat" [ref=e19]: "300"
+            - generic [ref=e20]:
+              - text: Data pierwszej raty
+              - textbox "Data pierwszej raty" [ref=e21]: 2026-10-01
+            - generic [ref=e22]:
+              - text: Marża banku (pp)
+              - textbox "Marża banku (pp)" [ref=e23]: "2.11"
+          - group "Wskaźnik" [ref=e24]:
+            - generic [ref=e26]:
+              - button "POLSTR 1M" [ref=e27]
+              - button "WIBOR 3M" [ref=e28]
+          - group "Typ rat" [ref=e29]:
+            - generic [ref=e31]:
+              - button "Równe" [ref=e32]
+              - button "Malejące" [ref=e33]
+          - generic [ref=e34]:
+            - generic [ref=e35]:
+              - generic [ref=e36]:
+                - paragraph [ref=e37]: Nadpłaty
+                - heading "Dodatkowe wpłaty" [level=2] [ref=e38]
+              - button "+ Dodaj" [ref=e39]
+            - generic [ref=e282]:
+              - generic [ref=e283]:
+                - text: Numer raty
+                - spinbutton "Numer raty" [ref=e284]: "2"
+              - generic [ref=e285]:
+                - text: Kwota (zł)
+                - textbox "Kwota (zł)" [ref=e286]: "9999999"
+              - generic [ref=e287]:
+                - text: Tryb
+                - combobox "Tryb" [ref=e288]:
+                  - option "Obniż ratę" [selected]
+                  - option "Skróć okres"
+              - button "Usuń nadpłatę" [ref=e289]: ×
+          - button "Policz harmonogram" [ref=e41]
+        - generic [ref=e42]:
+          - generic [ref=e290]:
+            - generic [ref=e291]:
+              - generic [ref=e292]: Pierwsza rata
+              - strong [ref=e293]: 2495,85 zł
+            - generic [ref=e294]:
+              - generic [ref=e295]: Ostatnia rata
+              - strong [ref=e296]: 2495,85 zł
+            - generic [ref=e297]:
+              - generic [ref=e298]: Suma odsetek
+              - strong [ref=e299]: 3773,61 zł
+            - generic [ref=e300]:
+              - generic [ref=e301]: Liczba rat
+              - strong [ref=e302]: "2"
+          - paragraph [ref=e303]: Nadpłata została ograniczona do pozostałego salda
+          - generic [ref=e304]:
+            - generic [ref=e305]:
+              - generic [ref=e306]:
+                - paragraph [ref=e307]: Szczegóły
+                - heading "Tabela rat" [level=2] [ref=e308]
+              - button "Eksport CSV" [ref=e309]
+            - table [ref=e311]:
+              - rowgroup [ref=e312]:
+                - row [ref=e313]:
+                  - columnheader "Nr" [ref=e314]
+                  - columnheader "Data" [ref=e315]
+                  - columnheader "Kapitał" [ref=e316]
+                  - columnheader "Odsetki" [ref=e317]
+                  - columnheader "Rata" [ref=e318]
+                  - columnheader "Nadpłata" [ref=e319]
+                  - columnheader "Saldo po spłacie" [ref=e320]
+              - rowgroup [ref=e321]:
+                - row [ref=e322]:
+                  - cell "1" [ref=e323]
+                  - cell "2026-10-01" [ref=e324]
+                  - cell "607,61 zł" [ref=e325]
+                  - cell "1888,24 zł" [ref=e326]
+                  - cell "2495,85 zł" [ref=e327]
+                  - cell "0,00 zł" [ref=e328]
+                  - cell "399 392,39 zł" [ref=e329]
+                - row [ref=e330]:
+                  - cell "2" [ref=e331]
+                  - cell "2026-11-01" [ref=e332]
+                  - cell "610,48 zł" [ref=e333]
+                  - cell "1885,37 zł" [ref=e334]
+                  - cell "2495,85 zł" [ref=e335]
+                  - cell "398 781,91 zł" [ref=e336]
+                  - cell "0,00 zł" [ref=e337]
+  - button "Open Next.js Dev Tools" [ref=e52] [cursor=pointer]
+  - alert [ref=e56]

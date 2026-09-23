@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { seriaWskaznika } from '../../../src/dane/wskazniki';
-import { policzHarmonogram, type Nadplata, type ParametryKredytu } from '../../../src/domena/harmonogram';
+import {
+  MAKSYMALNA_KWOTA_GR,
+  MAKSYMALNA_LICZBA_RAT,
+  policzHarmonogram,
+  type Nadplata,
+  type ParametryKredytu,
+} from '../../../src/domena/harmonogram';
 
 // Route handler jest cienki: parsuje parametry z query string, woła domenę, zwraca JSON.
 // Żadnych obliczeń finansowych w tym pliku. Przeliczenie jednostek wejścia
@@ -36,7 +42,9 @@ function parsujParametry(szukane: URLSearchParams): ParametryKredytu | string {
   const pierwszaRata = szukane.get('pierwszaRata') ?? '';
 
   if (!Number.isFinite(kwota) || kwota <= 0) return 'kwota: liczba dodatnia w złotych, np. 400000';
+  if (kwota * 100 > MAKSYMALNA_KWOTA_GR) return 'kwota: maksymalnie 50000000 zł';
   if (!Number.isInteger(liczbaRat) || liczbaRat <= 0) return 'liczbaRat: liczba całkowita dodatnia, np. 300';
+  if (liczbaRat > MAKSYMALNA_LICZBA_RAT) return 'liczbaRat: maksymalnie 420 rat';
   if (!Number.isFinite(marza) || marza < 0) return 'marza: punkty procentowe, np. 2.11';
   if (wskaznik !== 'POLSTR_1M' && wskaznik !== 'WIBOR_3M') return 'wskaznik: POLSTR_1M albo WIBOR_3M';
   if (typRat !== 'rowne' && typRat !== 'malejace') return 'typRat: rowne albo malejace';
@@ -71,6 +79,8 @@ export function GET(request: Request) {
         kapital: rata.kapitalGr,
         odsetki: rata.odsetkiGr,
         rata: rata.rataGr,
+        nadplata: rata.nadplataGr,
+        nadplataOgraniczona: rata.nadplataOgraniczona,
         saldoPoSplacie: rata.saldoPoSplacieGr,
       })),
       sumaOdsetek: harmonogram.sumaOdsetekGr,

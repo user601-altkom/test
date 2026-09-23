@@ -4,6 +4,9 @@ export type TypRat = 'rowne' | 'malejace';
 export type Wskaznik = 'POLSTR_1M' | 'WIBOR_3M';
 export type TrybNadplaty = 'obniz_rate' | 'skroc_okres';
 
+export const MAKSYMALNA_LICZBA_RAT = 420;
+export const MAKSYMALNA_KWOTA_GR = 5_000_000_000;
+
 export interface WpisSerii {
   od: string;
   stopa: number;
@@ -34,6 +37,7 @@ export interface Rata {
   odsetkiGr: number;
   rataGr: number;
   nadplataGr: number;
+  nadplataOgraniczona: boolean;
   saldoPoSplacieGr: number;
 }
 
@@ -50,6 +54,9 @@ function dataJakoObiekt(data: string): Date {
   const obiekt = new Date(`${data}T00:00:00Z`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data) || Number.isNaN(obiekt.getTime())) {
     throw new Error('data: oczekiwany format YYYY-MM-DD');
+  }
+  if (obiekt.toISOString().slice(0, 10) !== data) {
+    throw new Error('data: nieistniejąca data');
   }
   return obiekt;
 }
@@ -79,7 +86,9 @@ function znajdzWskaznik(data: string, seria: WpisSerii[]): number {
 
 function sprawdzParametry(parametry: ParametryKredytu): void {
   if (!Number.isInteger(parametry.kwotaGr) || parametry.kwotaGr <= 0) throw new Error('kwotaGr musi być dodatnią liczbą całkowitą');
+  if (parametry.kwotaGr > MAKSYMALNA_KWOTA_GR) throw new Error('kwotaGr: maksymalnie 50000000 zł');
   if (!Number.isInteger(parametry.liczbaRat) || parametry.liczbaRat <= 0) throw new Error('liczbaRat musi być dodatnią liczbą całkowitą');
+  if (parametry.liczbaRat > MAKSYMALNA_LICZBA_RAT) throw new Error('liczbaRat: maksymalnie 420 rat');
   if (!Number.isFinite(parametry.marza) || parametry.marza < 0) throw new Error('marża musi być nieujemną liczbą');
   dataJakoObiekt(parametry.pierwszaRata);
   if (parametry.seriaWskaznika.length === 0) throw new Error('seria wskaźnika nie może być pusta');
@@ -134,6 +143,7 @@ export function policzHarmonogram(parametry: ParametryKredytu): WynikHarmonogram
 
     const nadplata = nadplaty.get(numer);
     const nadplataGr = nadplata ? Math.min(saldoGr, nadplata.kwotaGr) : 0;
+    const nadplataOgraniczona = nadplataGr < (nadplata?.kwotaGr ?? 0);
     saldoGr -= nadplataGr;
     if (nadplataGr > 0 && nadplata?.tryb === 'obniz_rate') rataRownaGr = null;
 
@@ -146,6 +156,7 @@ export function policzHarmonogram(parametry: ParametryKredytu): WynikHarmonogram
       odsetkiGr,
       rataGr,
       nadplataGr,
+      nadplataOgraniczona,
       saldoPoSplacieGr: saldoGr,
     });
     poprzednieOprocentowanie = oprocentowanie;
